@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { Store } from '@ngrx/store';
+import { AppStateGlobal } from '../../app.reducer';
+import { isLoading, stopLoading } from '../../shared/ui.actions';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -10,14 +14,18 @@ import Swal from 'sweetalert2';
   styles: [
   ]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   loginForm: FormGroup;
+  loading: boolean = false;
+
+  uiSubscription: Subscription;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private store: Store<AppStateGlobal>
   ) { }
 
   ngOnInit(): void {
@@ -25,6 +33,13 @@ export class LoginComponent implements OnInit {
       correo: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(1)]]
     });
+
+    this.uiSubscription = this.store.select('ui').subscribe( ui => this.loading = ui.isLoading );
+
+  }
+
+  ngOnDestroy(): void {
+    this.uiSubscription.unsubscribe();
   }
 
   login() {
@@ -32,16 +47,19 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    Swal.showLoading();
+    this.store.dispatch( isLoading() );
+
+    // Swal.showLoading();
 
     const { correo, password } = this.loginForm.value;
     this.authService.loginUsuario( correo, password )
       .then( user => {
-        Swal.close();
+        // Swal.close();
+        this.store.dispatch( stopLoading() );
         this.router.navigateByUrl('dashboard');
       })
       .catch( error => {
-        Swal.hideLoading();
+        this.store.dispatch( stopLoading() );
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
