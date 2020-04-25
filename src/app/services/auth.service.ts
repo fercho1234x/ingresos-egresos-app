@@ -18,6 +18,11 @@ import { Subscription } from 'rxjs';
 export class AuthService {
 
   userSubscription: Subscription;
+  private _user: User;
+
+  get user() {
+    return {...this._user};
+  }
 
   constructor(
     private store: Store<AppStateGlobal>,
@@ -33,6 +38,7 @@ export class AuthService {
         this.userSubscription = this.angularFirestore.doc(`${ fuser.uid }/usuario`).valueChanges()
             .subscribe( (fireStoreUser: any) => {
               const user = User.fromFireStore( fireStoreUser );
+              this._user = user;
               this.store.dispatch( authActions.setUser( { user } ) );
             });
       } else {

@@ -26,6 +26,9 @@ import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { OrdenIngresoPipe } from './pipes/orden-ingreso.pipe';
+
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
     DetalleComponent,
     FooterComponent,
     NabvarComponent,
-    SidebarComponent
+    SidebarComponent,
+    OrdenIngresoPipe
   ],
   imports: [
     BrowserModule,
@@ -52,6 +56,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production, // Restrict extension to log-only mode
     }),
+    ChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
