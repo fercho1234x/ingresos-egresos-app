@@ -33,7 +33,6 @@ export class AuthService {
   initAuthListener() {
 
     this.auth.authState.subscribe( fuser => {
-      // console.log( fuser.uid );
       if (fuser) {
         this.userSubscription = this.angularFirestore.doc(`${ fuser.uid }/usuario`).valueChanges()
             .subscribe( (fireStoreUser: any) => {
@@ -43,7 +42,7 @@ export class AuthService {
             });
       } else {
         this.store.dispatch( unSetUser() );
-        this.userSubscription.unsubscribe();
+        this.userSubscription?.unsubscribe();
       }
     });
 

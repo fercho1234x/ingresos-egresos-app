@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppStateGlobal } from '../../app.reducer';
 import { IngresoEgreso } from '../../models/ingreso-egreso.model';
 
 import { MultiDataSet, Label } from 'ng2-charts';
+import { AppStateGlobalWithIngreso } from '../ingreso-egresp.reducer';
 
 @Component({
   selector: 'app-estadistica',
@@ -23,7 +23,7 @@ export class EstadisticaComponent implements OnInit {
   totalIngresos = 0;
 
   constructor(
-    private store: Store<AppStateGlobal>
+    private store: Store<AppStateGlobalWithIngreso>
   ) { }
 
   ngOnInit(): void {
